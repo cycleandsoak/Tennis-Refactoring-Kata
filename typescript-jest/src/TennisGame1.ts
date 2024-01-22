@@ -26,10 +26,10 @@ export class TennisGame1 implements TennisGame {
       score = this.computeScoreIfBothAreTied(score);
     }
     else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
-      const minusResult: number = this.m_score1 - this.m_score2;
-      if (minusResult === 1) score = 'Advantage player1';
-      else if (minusResult === -1) score = 'Advantage player2';
-      else if (minusResult >= 2) score = 'Win for player1';
+      const differenceBetweenPlayerScores: number = this.m_score1 - this.m_score2;
+      if (differenceBetweenPlayerScores === 1) score = 'Advantage player1';
+      else if (differenceBetweenPlayerScores === -1) score = 'Advantage player2';
+      else if (differenceBetweenPlayerScores >= 2) score = 'Win for player1';
       else score = 'Win for player2';
     }
     else {
