@@ -22,6 +22,7 @@ export class TennisGame1 implements TennisGame {
         let playerScoresAreEqual = this.player1Score === this.player2Score;
         let isMatchPoint = this.player1Score >= 4 || this.player2Score >= 4;
 
+        // consider replacing this with a strategy pattern
         if (playerScoresAreEqual) {
             return this.computeScoreIfBothAreTied();
         } else if (isMatchPoint) {
