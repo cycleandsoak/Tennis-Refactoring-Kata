@@ -36,7 +36,7 @@ export class TennisGame1 implements TennisGame {
                     score += '-';
                     tempScore = this.player2Score;
                 }
-                score = this.getWordForScore(tempScore, score);
+                score += this.getWordForScore(tempScore, score);
             }
         }
         return score;
@@ -45,17 +45,13 @@ export class TennisGame1 implements TennisGame {
     private getWordForScore(tempScore: number, score: string) {
         switch (tempScore) {
             case 0:
-                score += 'Love';
-                break;
+                return 'Love';
             case 1:
-                score += 'Fifteen';
-                break;
+                return 'Fifteen';
             case 2:
-                score += 'Thirty';
-                break;
+                return 'Thirty';
             case 3:
-                score += 'Forty';
-                break;
+                return 'Forty';
         }
         return score;
     }
