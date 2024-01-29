@@ -30,7 +30,9 @@ export class TennisGame1 implements TennisGame {
             score = this.computeScoreIfMatchPoint();
         } else {
             for (let i = 1; i < 3; i++) {
-                if (i === 1) tempScore = this.player1Score;
+                if (i === 1) {
+                    tempScore = this.player1Score;
+                }
                 else {
                     score += '-';
                     tempScore = this.player2Score;
