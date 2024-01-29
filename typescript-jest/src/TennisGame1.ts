@@ -1,8 +1,8 @@
 import {TennisGame} from './TennisGame';
 
 export class TennisGame1 implements TennisGame {
-    private m_score1: number = 0;
-    private m_score2: number = 0;
+    private player1Score: number = 0;
+    private player2Score: number = 0;
     private player1Name: string;
     private player2Name: string;
 
@@ -13,16 +13,16 @@ export class TennisGame1 implements TennisGame {
 
     wonPoint(playerName: string): void {
         if (playerName === 'player1')
-            this.m_score1 += 1;
+            this.player1Score += 1;
         else
-            this.m_score2 += 1;
+            this.player2Score += 1;
     }
 
     getScore(): string {
         let score: string = '';
         let tempScore: number = 0;
-        let playerScoresAreEqual = this.m_score1 === this.m_score2;
-        let isMatchPoint = this.m_score1 >= 4 || this.m_score2 >= 4;
+        let playerScoresAreEqual = this.player1Score === this.player2Score;
+        let isMatchPoint = this.player1Score >= 4 || this.player2Score >= 4;
 
         if (playerScoresAreEqual) {
             score = this.computeScoreIfBothAreTied(score);
@@ -30,10 +30,10 @@ export class TennisGame1 implements TennisGame {
             score = this.computeScoreIfMatchPoint();
         } else {
             for (let i = 1; i < 3; i++) {
-                if (i === 1) tempScore = this.m_score1;
+                if (i === 1) tempScore = this.player1Score;
                 else {
                     score += '-';
-                    tempScore = this.m_score2;
+                    tempScore = this.player2Score;
                 }
                 switch (tempScore) {
                     case 0:
@@ -55,7 +55,7 @@ export class TennisGame1 implements TennisGame {
     }
 
     private computeScoreIfMatchPoint() {
-        const differenceBetweenPlayerScores: number = this.m_score1 - this.m_score2;
+        const differenceBetweenPlayerScores: number = this.player1Score - this.player2Score;
         if (differenceBetweenPlayerScores === 1) return 'Advantage player1';
         else if (differenceBetweenPlayerScores === -1) return 'Advantage player2';
         else if (differenceBetweenPlayerScores >= 2) return 'Win for player1';
@@ -63,7 +63,7 @@ export class TennisGame1 implements TennisGame {
     }
 
     private computeScoreIfBothAreTied(score: string) {
-        switch (this.m_score1) {
+        switch (this.player1Score) {
             case 0:
                 score = 'Love-All';
                 break;
