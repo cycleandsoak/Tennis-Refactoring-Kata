@@ -20,7 +20,6 @@ export class TennisGame1 implements TennisGame {
 
     getScore(): string {
         let score: string = '';
-        let tempScore: number = 0;
         let playerScoresAreEqual = this.player1Score === this.player2Score;
         let isMatchPoint = this.player1Score >= 4 || this.player2Score >= 4;
 
@@ -29,11 +28,9 @@ export class TennisGame1 implements TennisGame {
         } else if (isMatchPoint) {
             score = this.computeScoreIfMatchPoint();
         } else {
-            tempScore = this.player1Score;
-            score += this.getWordForScore(tempScore);
+            score += this.getWordForScore(this.player1Score);
             score += '-';
-            tempScore = this.player2Score;
-            score += this.getWordForScore(tempScore);
+            score += this.getWordForScore(this.player2Score);
         }
         return score;
     }
