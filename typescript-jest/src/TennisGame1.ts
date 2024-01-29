@@ -25,7 +25,7 @@ export class TennisGame1 implements TennisGame {
         let isMatchPoint = this.player1Score >= 4 || this.player2Score >= 4;
 
         if (playerScoresAreEqual) {
-            score = this.computeScoreIfBothAreTied(score);
+            score = this.computeScoreIfBothAreTied();
         } else if (isMatchPoint) {
             score = this.computeScoreIfMatchPoint();
         } else {
@@ -38,13 +38,13 @@ export class TennisGame1 implements TennisGame {
                     score += '-';
                     tempScore = this.player2Score;
                 }
-                score += this.getWordForScore(tempScore, score);
+                score += this.getWordForScore(tempScore);
             }
         }
         return score;
     }
 
-    private getWordForScore(tempScore: number, score: string) {
+    private getWordForScore(tempScore: number) {
         switch (tempScore) {
             case 0:
                 return 'Love';
@@ -55,7 +55,7 @@ export class TennisGame1 implements TennisGame {
             case 3:
                 return 'Forty';
         }
-        return score;
+        return ''
     }
 
     private computeScoreIfMatchPoint() {
@@ -66,21 +66,16 @@ export class TennisGame1 implements TennisGame {
         else return 'Win for player2';
     }
 
-    private computeScoreIfBothAreTied(score: string) {
+    private computeScoreIfBothAreTied() {
         switch (this.player1Score) {
             case 0:
-                score = 'Love-All';
-                break;
+                return 'Love-All';
             case 1:
-                score = 'Fifteen-All';
-                break;
+                return 'Fifteen-All';
             case 2:
-                score = 'Thirty-All';
-                break;
+                return 'Thirty-All';
             default:
-                score = 'Deuce';
-                break;
+                return 'Deuce';
         }
-        return score;
     }
 }
