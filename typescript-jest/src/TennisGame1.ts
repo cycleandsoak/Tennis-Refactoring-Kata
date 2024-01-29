@@ -45,17 +45,7 @@ export class TennisGame1 implements TennisGame {
     }
 
     private getWordForScore(tempScore: number) {
-        switch (tempScore) {
-            case 0:
-                return 'Love';
-            case 1:
-                return 'Fifteen';
-            case 2:
-                return 'Thirty';
-            case 3:
-                return 'Forty';
-        }
-        return ''
+        return ['Love', 'Fifteen', 'Thirty', 'Forty'][tempScore];
     }
 
     private computeScoreIfMatchPoint() {
