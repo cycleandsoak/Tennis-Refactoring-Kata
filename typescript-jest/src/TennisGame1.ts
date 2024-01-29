@@ -26,30 +26,28 @@ export class TennisGame1 implements TennisGame {
 
         if (playerScoresAreEqual) {
             score = this.computeScoreIfBothAreTied(score);
+        } else if (isMatchPoint) {
+            score = this.computeScoreIfMatchPoint();
         } else {
-            if (isMatchPoint) {
-                score = this.computeScoreIfMatchPoint();
-            } else {
-                for (let i = 1; i < 3; i++) {
-                    if (i === 1) tempScore = this.m_score1;
-                    else {
-                        score += '-';
-                        tempScore = this.m_score2;
-                    }
-                    switch (tempScore) {
-                        case 0:
-                            score += 'Love';
-                            break;
-                        case 1:
-                            score += 'Fifteen';
-                            break;
-                        case 2:
-                            score += 'Thirty';
-                            break;
-                        case 3:
-                            score += 'Forty';
-                            break;
-                    }
+            for (let i = 1; i < 3; i++) {
+                if (i === 1) tempScore = this.m_score1;
+                else {
+                    score += '-';
+                    tempScore = this.m_score2;
+                }
+                switch (tempScore) {
+                    case 0:
+                        score += 'Love';
+                        break;
+                    case 1:
+                        score += 'Fifteen';
+                        break;
+                    case 2:
+                        score += 'Thirty';
+                        break;
+                    case 3:
+                        score += 'Forty';
+                        break;
                 }
             }
         }
