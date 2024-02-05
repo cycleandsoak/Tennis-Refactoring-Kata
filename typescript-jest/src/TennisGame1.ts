@@ -6,11 +6,30 @@ interface CurrentScore {
 }
 
 interface ScoreStrategy {
-    isApplicable(current: CurrentScore): boolean;
     getScore(current: CurrentScore): string;
 }
 
-class MatchPointScoringStrategy implements ScoreStrategy{
+interface ConditionalScoreStrategy extends ScoreStrategy {
+    isApplicable(current: CurrentScore): boolean;
+}
+
+class ChainOfCommand implements ScoreStrategy {
+
+    constructor(
+        private mainStrategy: ConditionalScoreStrategy,
+        private delegateTo: ScoreStrategy,
+    ) {
+    }
+    getScore(current: CurrentScore): string {
+        if (this.mainStrategy.isApplicable(current)) {
+            return this.mainStrategy.getScore(current);
+        }
+        return this.delegateTo.getScore(current);
+    }
+
+}
+
+class MatchPointScoringStrategy implements ConditionalScoreStrategy{
 
     isApplicable(current: CurrentScore) {
         return current.player1 >= 4 || current.player2 >= 4;
@@ -24,7 +43,7 @@ class MatchPointScoringStrategy implements ScoreStrategy{
         else return 'Win for player2';
     }
 }
-class EqualScoreStrategy implements ScoreStrategy{
+class EqualScoreStrategy implements ConditionalScoreStrategy{
     isApplicable(current: CurrentScore) {
         return current.player1 === current.player2;
     }
@@ -42,9 +61,6 @@ class EqualScoreStrategy implements ScoreStrategy{
     }
 }
 class RegularScoringStrategy implements ScoreStrategy {
-    isApplicable(current: CurrentScore): boolean {
-        return true;
-    }
     getScore(current: CurrentScore): string {
         return `${this.getWordForScore(current.player1)}-${this.getWordForScore(current.player2)}`;
     }
@@ -73,24 +89,20 @@ export class TennisGame1 implements TennisGame {
             this.player2Score += 1;
     }
 
+    private readonly SCORING_RULES = new ChainOfCommand(new EqualScoreStrategy(),
+        new ChainOfCommand(new MatchPointScoringStrategy(),
+            new RegularScoringStrategy()));
+
+    // private readonly SCORING_RULES = ChainOfCommand.defineRules()
+    //     .firstTry(new EqualScoreStrategy())
+    //     .thenTry(new MatchPointScoringStrategy())
+    //     .fallbackTo(new RegularScoringStrategy());
+
     getScore(): string {
-        const current: CurrentScore = {
+        return this.SCORING_RULES.getScore({
             player1: this.player1Score,
             player2: this.player2Score,
-        };
-
-        const equalScoreStrategy = new EqualScoreStrategy();
-        const matchPointScoringStrategy = new MatchPointScoringStrategy();
-        const regularScoringStrategy = new RegularScoringStrategy();
-
-        // consider replacing this with a strategy pattern
-        if (equalScoreStrategy.isApplicable(current)) {
-            return equalScoreStrategy.getScore(current);
-        } else if (matchPointScoringStrategy.isApplicable(current)) {
-            return matchPointScoringStrategy.getScore(current);
-        } else {
-            return regularScoringStrategy.getScore(current);
-        }
+        });
     }
 
     //function recursive()
