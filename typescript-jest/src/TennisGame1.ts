@@ -1,5 +1,60 @@
 import {TennisGame} from './TennisGame';
 
+interface CurrentScore {
+    player1:number;
+    player2:number;
+}
+
+interface ScoreStrategy {
+    isApplicable(current: CurrentScore): boolean;
+    getScore(current: CurrentScore): string;
+}
+
+class MatchPointScoringStrategy implements ScoreStrategy{
+
+    isApplicable(current: CurrentScore) {
+        return current.player1 >= 4 || current.player2 >= 4;
+    }
+
+    getScore(current: CurrentScore) {
+        const differenceBetweenPlayerScores: number = current.player1 - current.player2;
+        if (differenceBetweenPlayerScores === 1) return 'Advantage player1';
+        else if (differenceBetweenPlayerScores === -1) return 'Advantage player2';
+        else if (differenceBetweenPlayerScores >= 2) return 'Win for player1';
+        else return 'Win for player2';
+    }
+}
+class EqualScoreStrategy implements ScoreStrategy{
+    isApplicable(current: CurrentScore) {
+        return current.player1 === current.player2;
+    }
+    getScore(current: CurrentScore) {
+        switch (current.player1) {
+            case 0:
+                return 'Love-All';
+            case 1:
+                return 'Fifteen-All';
+            case 2:
+                return 'Thirty-All';
+            default:
+                return 'Deuce';
+        }
+    }
+}
+class RegularScoringStrategy implements ScoreStrategy {
+    isApplicable(current: CurrentScore): boolean {
+        return true;
+    }
+    getScore(current: CurrentScore): string {
+        return `${this.getWordForScore(current.player1)}-${this.getWordForScore(current.player2)}`;
+    }
+
+    private getWordForScore(tempScore: number) {
+        return ['Love', 'Fifteen', 'Thirty', 'Forty'][tempScore];
+    }
+}
+
+
 export class TennisGame1 implements TennisGame {
     private player1Score: number = 0;
     private player2Score: number = 0;
@@ -19,41 +74,41 @@ export class TennisGame1 implements TennisGame {
     }
 
     getScore(): string {
-        let playerScoresAreEqual = this.player1Score === this.player2Score;
-        let isMatchPoint = this.player1Score >= 4 || this.player2Score >= 4;
+        const current: CurrentScore = {
+            player1: this.player1Score,
+            player2: this.player2Score,
+        };
+
+        const equalScoreStrategy = new EqualScoreStrategy();
+        const matchPointScoringStrategy = new MatchPointScoringStrategy();
+        const regularScoringStrategy = new RegularScoringStrategy();
 
         // consider replacing this with a strategy pattern
-        if (playerScoresAreEqual) {
-            return this.computeScoreIfBothAreTied();
-        } else if (isMatchPoint) {
-            return this.computeScoreIfMatchPoint();
+        if (equalScoreStrategy.isApplicable(current)) {
+            return equalScoreStrategy.getScore(current);
+        } else if (matchPointScoringStrategy.isApplicable(current)) {
+            return matchPointScoringStrategy.getScore(current);
         } else {
-            return `${this.getWordForScore(this.player1Score)}-${this.getWordForScore(this.player2Score)}`;
+            return regularScoringStrategy.getScore(current);
         }
     }
 
-    private getWordForScore(tempScore: number) {
-        return ['Love', 'Fifteen', 'Thirty', 'Forty'][tempScore];
-    }
+    //function recursive()
+    //return if regularScoringStrategy is applicable
+    //else
+    //
 
-    private computeScoreIfMatchPoint() {
-        const differenceBetweenPlayerScores: number = this.player1Score - this.player2Score;
-        if (differenceBetweenPlayerScores === 1) return 'Advantage player1';
-        else if (differenceBetweenPlayerScores === -1) return 'Advantage player2';
-        else if (differenceBetweenPlayerScores >= 2) return 'Win for player1';
-        else return 'Win for player2';
-    }
 
-    private computeScoreIfBothAreTied() {
-        switch (this.player1Score) {
-            case 0:
-                return 'Love-All';
-            case 1:
-                return 'Fifteen-All';
-            case 2:
-                return 'Thirty-All';
-            default:
-                return 'Deuce';
-        }
-    }
+//1) Introduce a type for all the data(the 2 scores).
+    //2 Extract method for player scores are equal: shouldHandle: (current) => boolean
+    //3 Extract method for compute score, both are tied. handle: (current) => string
+    //4 Create class for shouldHandle and handle (and update our if/else)
+    //5. repeat 2-4 for each of our if/elses
+    //6. a) replace our if/else with a loop that loops over each strategy object
+    //6. b) [alternative] write the recursive delegation thing that says "if applicable get score otherwise delegate"
+
+
+
+
+
 }
